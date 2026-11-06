@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bts-audit"
+version = "0.1.0"
+description = "Audit Bayesian Truth Serum in multi-agent medical diagnosis. Local, no API key."
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "pyarrow>=14.0",
+  "PyYAML>=6.0",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+gpu = [
+  "torch>=2.1",
+  "transformers>=4.40",
+  "accelerate>=0.30",
+  "bitsandbytes>=0.43",
+  "sentencepiece>=0.2",
+  "protobuf>=4.25",
+]
+data = [
+  # Parquet reading for PubMedQA, MMLU, and MedMCQA.
+  "pyarrow>=14.0",
+]
+
+[project.scripts]
+bts-audit = "bts_audit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

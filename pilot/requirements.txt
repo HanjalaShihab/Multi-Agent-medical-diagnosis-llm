@@ -1,0 +1,7 @@
+# Core dependencies. Loading the real benchmarks and running the analysis
+# need only these. Parquet is used by PubMedQA, MMLU, and MedMCQA.
+numpy>=1.24
+pandas>=2.0
+pyarrow>=14.0
+PyYAML>=6.0
+tqdm>=4.66

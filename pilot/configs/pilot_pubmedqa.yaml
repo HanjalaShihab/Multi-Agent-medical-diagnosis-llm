@@ -1,0 +1,65 @@
+run_name: pubmedqa_300
+seed: 13
+
+# PubMedQA pqa_labeled, 1,000 human-annotated rows (Jin et al., 2019; MIT).
+# The only benchmark in the suite with genuine abstract-section evidence slices.
+# Download: python scripts/download_data.py pubmedqa --out data/raw/pubmedqa
+# Prepare:  python -m bts_audit.cli prepare --dataset pubmedqa --raw data/raw/pubmedqa \
+#               --out data/cases/pubmedqa_300.jsonl --n 300
+data:
+  dataset: pubmedqa
+  path: data/cases/pubmedqa_300.jsonl
+  limit: 300
+
+backend:
+  type: hf
+  hf:
+    device_map: auto
+    dtype: auto
+    load_in_4bit: true
+    max_loaded_models: 1
+    trust_remote_code: false
+
+team:
+  agents: 5
+  models:
+    - Qwen/Qwen2.5-3B-Instruct
+    - Qwen/Qwen2.5-7B-Instruct
+    - microsoft/Phi-3.5-mini-instruct
+  roles:
+    - attending physician
+    - internist
+    - specialist
+    - radiologist
+    - resident
+  temperature: 0.7
+  forecast_temperature: 0.0
+  top_p: 1.0
+  max_new_tokens: 384
+  rounds: 2
+
+cells:
+  - H0
+  - H1
+  - H2
+  - H3
+  - H4
+  - H5
+  - SYC
+
+scoring:
+  variant: geometric
+  eps: 1.0e-9
+
+analysis:
+  n_bootstrap: 1000
+  bootstrap_seed: 7
+  ece_bins: 10
+  alpha: 0.05
+  rarity_premium_threshold: 0.05
+  discrimination_gap_threshold: 0.10
+  p5_delta_threshold: 0.15
+  p2_delta_threshold: 0.10
+  oracle_abs_threshold: 0.05
+
+output_dir: results/pubmedqa_300

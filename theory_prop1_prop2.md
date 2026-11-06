@@ -524,12 +524,12 @@ Each prediction maps to one cell of the 2-week pilot. "Score" means the BTS stat
 | # | Cell | Prediction | Test statistic | Falsified if |
 |---|---|---|---|---|
 | P1 | H0: one model, one prompt, T=0 | Consensus collapse; score variance ≈ 0; AUC undefined | variance, agreement rate | AUC > 0.55 with non-zero variance |
-| P2 | H1: one model, T=0.7, 5 samples | $\Delta\mathrm{AUC}=\mathrm{AUC}(\text{score})-\mathrm{AUC}(\text{confidence})\approx 0$ | DeLong test | $\Delta$AUC > 0.10, significant |
-| P3 | H2: one model, 5 role prompts | $\Delta\mathrm{AUC}\approx 0$; role prompts are not private evidence | DeLong test | $\Delta$AUC > 0.10 |
-| P4 | H3: 3 model families | $\Delta\mathrm{AUC}>0$ but small, and explained by forecast dispersion | regression of AUC on ECE | $\Delta$AUC > 0.15 unexplained by ECE |
+| P2 | H1: one model, T=0.7, 5 samples | $\Delta\mathrm{AUC}=\mathrm{AUC}(\text{score})-\mathrm{AUC}(\text{confidence})\le 0.10$; a negative value is the popularity effect | DeLong test | $\Delta$AUC > 0.10, significant |
+| P3 | H2: one model, 5 role prompts | $\Delta\mathrm{AUC}\le 0.10$; role prompts are not private evidence | DeLong test | $\Delta$AUC > 0.10 |
+| P4 | H3: 3 model families | $\Delta\mathrm{AUC}\le 0.15$; model heterogeneity does not create a truth channel | DeLong test, ECE regression | $\Delta$AUC > 0.15 unexplained by ECE |
 | P5 | H4: disjoint evidence slices | $\Delta\mathrm{AUC}\ge 0.15$; $\rho$ rises vs H3 | DeLong + $\rho$ | no recovery |
-| P6a | All cells | **Rarity premium:** correct rare diagnoses score above correct common ones | stratified mean difference | premium < 5 points |
-| P6b | All cells | **Discrimination gap:** within the same rarity stratum, correct and wrong answers score alike | score(correct rare) − score(wrong rare) | \|gap\| > 0.10 nats |
+| P6a | All cells | **Rarity premium:** within a case, the information score rises with answer rarity | within-case slope of $I_i$ on $-\ln \bar x(x_i)$ | slope < 0.05 nats/nat (no practical premium) |
+| P6b | All cells | **Discrimination gap:** at the same answer frequency, correct and wrong answers score alike | within-case score(correct) − score(wrong), controlling for answer count | \|gap\| > 0.10 nats |
 | P7 | Sycophancy control | Under user pressure, minority = truth, so AUC > 0.5 and BTS-guided selection reduces flip rate | flip rate | no reduction (fails to replicate 2608.25267's direction) |
 | P8 | Oracle forecasts | Replacing elicited forecasts with the empirical answer distribution drives $\Delta$AUC→0 in H1–H3, but not in H4 | ablation | $\Delta$AUC survives oracle forecasts in H1–H3 |
 

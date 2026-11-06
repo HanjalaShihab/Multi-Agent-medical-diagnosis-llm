@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Large data and run outputs are not source.
+data/raw/
+data/cases/*.jsonl
+data/cases/*.stats.json
+results/
+!results/.gitkeep
+
+# Local model cache
+.cache/

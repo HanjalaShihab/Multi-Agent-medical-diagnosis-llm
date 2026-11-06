@@ -1,0 +1,4 @@
+# Data download uses only the Python standard library (urllib), so there are
+# no extra download dependencies. Parquet support comes from pyarrow in
+# requirements.txt.
+-r requirements.txt
