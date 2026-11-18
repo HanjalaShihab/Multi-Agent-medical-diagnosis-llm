@@ -51,6 +51,12 @@ bts-audit doctor --config configs/mock_medqa.yaml
 PYTHONPATH=src python3 -m bts_audit.cli doctor --config configs/mock_medqa.yaml
 ```
 
+**Other environments:** for a Kaggle GPU notebook see
+[`docs/KAGGLE.md`](docs/KAGGLE.md) and
+[`notebooks/kaggle_run.ipynb`](notebooks/kaggle_run.ipynb). For a small real-model
+run on CPU (slow, no 4-bit) use `configs/cpu_pubmedqa.yaml` or
+`configs/cpu_medqa.yaml` with `requirements-cpu.txt`.
+
 ---
 
 ## 2. What the pilot runs
@@ -224,25 +230,36 @@ Smaller setups work:
 
 | VRAM | Suggested team | Notes |
 |---|---|---|
-| 24 GB | Qwen2.5-7B + Qwen2.5-3B + Phi-3.5-mini, 4-bit | Default configs. |
+| 24 GB | Qwen2.5-7B + Qwen2.5-3B + Phi-3.5-mini, 4-bit | Default `pilot_*.yaml` configs. |
+| 16 GB (Kaggle T4/P100) | Qwen2.5-7B + Qwen2.5-3B + Phi-3.5-mini, 4-bit | Use `configs/kaggle_*.yaml`; see [`docs/KAGGLE.md`](docs/KAGGLE.md). |
 | 12–16 GB | Qwen2.5-3B + Phi-3.5-mini + Qwen2.5-1.5B, 4-bit | Edit `team.models` in a copy of the config; keep `max_loaded_models: 1`. |
 | 8 GB | one 3B model + two 1.5B models, 4-bit | Use H1/H4/H5/SYC first. |
-| CPU only | `Qwen/Qwen2.5-0.5B-Instruct` | Slow but runnable; edit a copy of a config. |
+| CPU only | `Qwen/Qwen2.5-0.5B-Instruct` / 1.5B | Very slow; use `configs/cpu_*.yaml` with `requirements-cpu.txt`. |
 
 The runner loads **one model at a time** and evicts it before the next family.
-That is why a 3-model cell fits in 24 GB. Do not raise
+That is why a 3-model cell fits in 16–24 GB. Do not raise
 `backend.hf.max_loaded_models` unless you have spare VRAM.
 
 ### 4.2 Install
+
+**Local GPU (own machine):**
 
 ```bash
 cd pilot
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements-gpu.txt -r requirements.txt
+pip install -r requirements-gpu.txt
 pip install -e . --no-deps
 ```
+
+**Kaggle GPU:** use `requirements-kaggle.txt` and the `configs/kaggle_*.yaml`
+configs, or run [`notebooks/kaggle_run.ipynb`](notebooks/kaggle_run.ipynb). See
+[`docs/KAGGLE.md`](docs/KAGGLE.md).
+
+**CPU later:** `pip install -r requirements-cpu.txt` and use
+`configs/cpu_medqa.yaml` / `configs/cpu_pubmedqa.yaml` (no 4-bit, small models,
+small limits by default).
 
 If you already have a working CUDA PyTorch, install it first and then install
 the remaining packages without letting pip replace it.
@@ -394,15 +411,26 @@ are not testable on this suite**, and the report says so.
 
 Configs live in `configs/`:
 
-| Config | Backend | Run directory |
+| Config | Backend | Run directory / notes |
 |---|---|---|
-| `pilot_medqa.yaml` | HF | `results/medqa_300` |
-| `pilot_pubmedqa.yaml` | HF | `results/pubmedqa_300` |
+| `pilot_medqa.yaml` | HF | `results/medqa_300` (local GPU) |
+| `pilot_pubmedqa.yaml` | HF | `results/pubmedqa_300` (local GPU) |
 | `pilot_mmlu_med.yaml` | HF | `results/mmlu_med_300` |
 | `pilot_medmcqa.yaml` | HF | `results/medmcqa_300` |
 | `pilot_medxpertqa.yaml` | HF | `results/medxpertqa_300` |
+| `kaggle_medqa.yaml` | HF | `/kaggle/working/results/kaggle_medqa` (T4/P100, 4-bit float16) |
+| `kaggle_pubmedqa.yaml` | HF | `/kaggle/working/results/kaggle_pubmedqa` |
+| `kaggle_mmlu_med.yaml` | HF | `/kaggle/working/results/kaggle_mmlu_med` |
+| `kaggle_medmcqa.yaml` | HF | `/kaggle/working/results/kaggle_medmcqa` |
+| `kaggle_medxpertqa.yaml` | HF | `/kaggle/working/results/kaggle_medxpertqa` |
+| `cpu_medqa.yaml` | HF | `results/cpu_medqa` (CPU, small models, small default scope) |
+| `cpu_pubmedqa.yaml` | HF | `results/cpu_pubmedqa` |
 | `pilot_medqa_ollama.yaml` | Ollama | `results/medqa_ollama` |
 | `mock_medqa.yaml` | mock | `results/mock_medqa` |
+
+`python -m bts_audit.cli run` accepts `--data PATH` and `--out DIR` to override
+`data.path` and `output_dir` without editing the config (useful on Kaggle, e.g.
+`--data /kaggle/working/data/cases/pubmedqa_300.jsonl`).
 
 The important fields:
 
@@ -560,11 +588,13 @@ pilot/
     analysis.py       P1–P8 metrics, bootstrap/DeLong, report generation
     backends/         mock, HuggingFace, Ollama
     data/             loaders for the five benchmarks plus the generic escape hatch
-  configs/            five benchmark configs, Ollama, mock
+  configs/            pilot, Kaggle, CPU, Ollama, and mock configs
+  notebooks/          kaggle_run.ipynb
   scripts/            smoke_test.sh, run_pilot.sh, download_data.py
   tests/              41 unittest tests (stdlib only)
   data/README.md      dataset schemas, layouts, licenses
   docs/PILOT_GUIDE.md 2-week run plan and go/no-go decision tree
+  docs/KAGGLE.md      Kaggle (GPU) and CPU run guide
   results/            generated runs (git-ignored)
 ```
 

@@ -26,6 +26,21 @@ gpu = [
   "sentencepiece>=0.2",
   "protobuf>=4.25",
 ]
+cpu = [
+  "torch>=2.1",
+  "transformers>=4.40",
+  "accelerate>=0.30",
+  "sentencepiece>=0.2",
+  "protobuf>=4.25",
+]
+kaggle = [
+  "torch>=2.1",
+  "transformers>=4.40",
+  "accelerate>=0.30",
+  "bitsandbytes>=0.43",
+  "sentencepiece>=0.2",
+  "protobuf>=4.25",
+]
 data = [
   # Parquet reading for PubMedQA, MMLU, and MedMCQA.
   "pyarrow>=14.0",

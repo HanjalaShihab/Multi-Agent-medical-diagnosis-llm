@@ -81,6 +81,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         cfg["cells"] = [c.strip().upper() for c in args.cells.split(",") if c.strip()]
     if args.limit:
         cfg["data"]["limit"] = args.limit
+    if args.data:
+        cfg["data"]["path"] = args.data
     if args.out:
         cfg["output_dir"] = args.out
 
@@ -134,7 +136,10 @@ def _f(value: Any) -> str:
 
 def cmd_doctor(args: argparse.Namespace) -> int:
     print(f"Python: {sys.version.split()[0]} on {platform.platform()}")
-    for name in ("numpy", "pandas", "yaml", "tqdm"):
+    in_kaggle = bool(Path("/kaggle/working").exists() or __import__("os").environ.get("KAGGLE_KERNEL_RUN_TYPE"))
+    if in_kaggle:
+        print("  environment: Kaggle")
+    for name in ("numpy", "pandas", "yaml", "tqdm", "pyarrow"):
         try:
             module = __import__(name)
             print(f"  {name}: {getattr(module, '__version__', 'ok')}")
@@ -145,7 +150,9 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
         print(f"  torch: {torch.__version__} | CUDA: {torch.cuda.is_available()}")
         if torch.cuda.is_available():
-            print(f"  GPU: {torch.cuda.get_device_name(0)}")
+            count = torch.cuda.device_count()
+            names = [torch.cuda.get_device_name(i) for i in range(count)]
+            print(f"  GPU: {', '.join(names)}")
     except Exception as exc:
         print(f"  torch: not installed ({exc})")
     try:
@@ -154,12 +161,21 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         print(f"  transformers: {transformers.__version__}")
     except Exception as exc:
         print(f"  transformers: not installed ({exc})")
+    try:
+        import bitsandbytes as bnb
+
+        print(f"  bitsandbytes: {getattr(bnb, '__version__', 'ok')}")
+    except Exception as exc:
+        print(f"  bitsandbytes: not installed ({exc})")
 
     if args.config:
         cfg = load_config(args.config)
         print(f"Config OK: {args.config} | backend={cfg['backend']['type']} | cells={cfg['cells']}")
         data_path = _resolve(cfg["data"].get("path"), Path(args.config))
         print(f"Data path: {data_path} | exists={bool(data_path and Path(data_path).exists())}")
+        out_path = _resolve(cfg.get("output_dir"), Path(args.config))
+        if out_path:
+            print(f"Output dir: {out_path}")
         if cfg["backend"]["type"] == "ollama":
             host = cfg["backend"]["ollama"].get("host", "http://localhost:11434")
             try:
@@ -209,7 +225,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("run", help="run the H0-H5 ladder")
     p.add_argument("--config", required=True)
-    p.add_argument("--out", default=None)
+    p.add_argument("--out", default=None, help="output directory (overrides config output_dir)")
+    p.add_argument("--data", default=None, help="case JSONL path (overrides config data.path)")
     p.add_argument("--cells", default=None, help="comma-separated subset, e.g. H1,H4")
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--backend", default=None, choices=["mock", "hf", "ollama"])

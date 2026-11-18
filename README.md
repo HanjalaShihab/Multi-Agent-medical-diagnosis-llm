@@ -144,6 +144,21 @@ The report is written under each config's `output_dir`, for example
 `pilot/results/medqa_300/report.md`. A cheaper first pass uses `--limit 60
 --cells H1,H4,H5,SYC`; `--resume` continues an interrupted run.
 
+### Kaggle (GPU)
+
+Run on a Kaggle T4/P100 with no local GPU: use
+[`pilot/notebooks/kaggle_run.ipynb`](pilot/notebooks/kaggle_run.ipynb) or the
+`configs/kaggle_*.yaml` configs. See [`pilot/docs/KAGGLE.md`](pilot/docs/KAGGLE.md).
+
+### CPU later
+
+For a small real-model check without a GPU (slow, no 4-bit):
+
+```bash
+pip install -r requirements-cpu.txt
+python -m bts_audit.cli run --config configs/cpu_pubmedqa.yaml --limit 5 --cells H1
+```
+
 ### Ollama alternative
 
 ```bash

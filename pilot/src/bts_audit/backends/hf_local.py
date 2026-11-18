@@ -39,7 +39,10 @@ class HFModelPool:
 
         if self.dtype == "auto":
             if torch.cuda.is_available():
-                return torch.bfloat16
+                # float16 is broadly compatible (T4/P100); prefer bf16 only when supported.
+                if hasattr(torch.cuda, "is_bf16_supported") and torch.cuda.is_bf16_supported():
+                    return torch.bfloat16
+                return torch.float16
             return torch.float32
         return getattr(torch, str(self.dtype).replace("torch.", ""))
 
@@ -51,15 +54,32 @@ class HFModelPool:
             "device_map": self.device_map,
             "trust_remote_code": self.trust_remote_code,
         }
-        if self.load_in_4bit:
-            from transformers import BitsAndBytesConfig
-
-            kwargs["quantization_config"] = BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_compute_dtype=torch.bfloat16,
-                bnb_4bit_quant_type="nf4",
-                bnb_4bit_use_double_quant=True,
+        use_4bit = bool(self.load_in_4bit)
+        if use_4bit and not torch.cuda.is_available():
+            print(
+                f"[hf] load_in_4bit requested but CUDA is unavailable; loading {model_name} without 4-bit.",
+                flush=True,
             )
+            use_4bit = False
+        if use_4bit:
+            try:
+                from transformers import BitsAndBytesConfig
+
+                compute_dtype = torch.bfloat16
+                if hasattr(torch.cuda, "is_bf16_supported") and not torch.cuda.is_bf16_supported():
+                    compute_dtype = torch.float16
+                kwargs["quantization_config"] = BitsAndBytesConfig(
+                    load_in_4bit=True,
+                    bnb_4bit_compute_dtype=compute_dtype,
+                    bnb_4bit_quant_type="nf4",
+                    bnb_4bit_use_double_quant=True,
+                )
+            except Exception as exc:
+                print(
+                    f"[hf] 4-bit unavailable ({exc}); loading {model_name} without 4-bit.",
+                    flush=True,
+                )
+                kwargs["torch_dtype"] = self._dtype()
         else:
             kwargs["torch_dtype"] = self._dtype()
 

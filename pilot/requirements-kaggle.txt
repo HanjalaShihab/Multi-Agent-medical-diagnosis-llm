@@ -1,0 +1,10 @@
+-r requirements.txt
+
+# Kaggle GPU inference. Install in a notebook cell before running.
+# Kaggle images often include torch/transformers; reinstall only if needed.
+torch>=2.1
+transformers>=4.40
+accelerate>=0.30
+bitsandbytes>=0.43
+sentencepiece>=0.2
+protobuf>=4.25
