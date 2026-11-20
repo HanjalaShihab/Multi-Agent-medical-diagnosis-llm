@@ -1,0 +1,65 @@
+run_name: cpu_medxpertqa_local
+seed: 13
+
+# CPU-friendly local config for medxpertqa.
+# - Uses locally downloaded small models (no Hugging Face download at runtime).
+# - No 4-bit, float32 on CPU. Expect slow generation (especially for H4/H5/SYC).
+# - Recommended on CPU: start with a small check, e.g.  --limit 10 --cells H1,H4
+# - Full audit (H0-H5,SYC, 300 cases) is very slow on CPU; prefer Kaggle GPU.
+data:
+  dataset: medxpertqa
+  path: data/cases/medxpertqa_300.jsonl
+  limit: 300
+
+backend:
+  type: hf
+  hf:
+    device_map: cpu
+    dtype: float32
+    load_in_4bit: false
+    max_loaded_models: 1
+    trust_remote_code: false
+
+team:
+  agents: 5
+  models:
+    - /home/hanjala-shihab/Documents/Multi-Agent medical diagnosis llm/hf_models/Qwen2.5-0.5B-Instruct
+    - /home/hanjala-shihab/Documents/Multi-Agent medical diagnosis llm/hf_models/Qwen2.5-1.5B-Instruct
+    - /home/hanjala-shihab/Documents/Multi-Agent medical diagnosis llm/hf_models/Qwen2.5-0.5B-Instruct
+  roles:
+    - attending physician
+    - internist
+    - specialist
+    - radiologist
+    - resident
+  temperature: 0.7
+  forecast_temperature: 0.0
+  top_p: 1.0
+  max_new_tokens: 160
+  rounds: 2
+
+cells:
+  - H0
+  - H1
+  - H2
+  - H3
+  - H4
+  - H5
+  - SYC
+
+scoring:
+  variant: geometric
+  eps: 1.0e-9
+
+analysis:
+  n_bootstrap: 500
+  bootstrap_seed: 7
+  ece_bins: 10
+  alpha: 0.05
+  rarity_premium_threshold: 0.05
+  discrimination_gap_threshold: 0.10
+  p5_delta_threshold: 0.15
+  p2_delta_threshold: 0.10
+  oracle_abs_threshold: 0.05
+
+output_dir: results/cpu_medxpertqa_local

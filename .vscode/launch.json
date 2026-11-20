@@ -1,0 +1,119 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "BTS: Doctor (CPU PubMedQA local)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bts_audit.cli",
+      "args": ["doctor", "--config", "configs/cpu_pubmedqa_local.yaml"],
+      "cwd": "${workspaceFolder}/pilot",
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONPATH": "${workspaceFolder}/pilot/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "BTS: Run sanity (PubMedQA, 3 cases, H1)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bts_audit.cli",
+      "args": [
+        "run",
+        "--config", "configs/cpu_pubmedqa_local.yaml",
+        "--limit", "3",
+        "--cells", "H1",
+        "--out", "results/cpu_pubmedqa_vscode_sanity"
+      ],
+      "cwd": "${workspaceFolder}/pilot",
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONPATH": "${workspaceFolder}/pilot/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "BTS: Run small (PubMedQA, 10 cases, H1+H4)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bts_audit.cli",
+      "args": [
+        "run",
+        "--config", "configs/cpu_pubmedqa_local.yaml",
+        "--limit", "10",
+        "--cells", "H1,H4",
+        "--out", "results/cpu_pubmedqa_vscode_10",
+        "--resume"
+      ],
+      "cwd": "${workspaceFolder}/pilot",
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONPATH": "${workspaceFolder}/pilot/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "BTS: Run sanity (MedQA, 3 cases, H1)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bts_audit.cli",
+      "args": [
+        "run",
+        "--config", "configs/cpu_medqa_local.yaml",
+        "--limit", "3",
+        "--cells", "H1",
+        "--out", "results/cpu_medqa_vscode_sanity"
+      ],
+      "cwd": "${workspaceFolder}/pilot",
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONPATH": "${workspaceFolder}/pilot/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "BTS: Analyze (edit results dir in args)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bts_audit.cli",
+      "args": [
+        "analyze",
+        "--results", "results/cpu_pubmedqa_vscode_sanity"
+      ],
+      "cwd": "${workspaceFolder}/pilot",
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONPATH": "${workspaceFolder}/pilot/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "BTS: Plot results (edit results dir in args)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/pilot/scripts/plot_results.py",
+      "args": [
+        "--results", "results/cpu_pubmedqa_vscode_sanity"
+      ],
+      "cwd": "${workspaceFolder}/pilot",
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONPATH": "${workspaceFolder}/pilot/src"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

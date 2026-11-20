@@ -1,6 +1,14 @@
 # Unrelated local material, not part of this project.
 Samples/
 
+# Local model downloads (large, not for git)
+hf_models/
+
+# Local venvs / setup artifacts (not for git)
+pilot/.venv/
+pilot/setup_cpu.log
+pilot/results/
+
 # Python
 __pycache__/
 *.py[cod]
