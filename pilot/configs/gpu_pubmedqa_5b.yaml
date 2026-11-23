@@ -1,0 +1,55 @@
+run_name: gpu_pubmedqa_5b
+seed: 13
+
+# GPU config - ~5B target model (PubMedQA).
+# NOTE: True 5B open instruct models are less common; this uses a practical nearby option.
+# Verify model ID/license/VRAM on your GPU PC before full run. You can swap the model ID.
+# Independent run / own output dir. Resume-safe within same out dir via --resume.
+data:
+  dataset: pubmedqa
+  path: data/cases/pubmedqa_300.jsonl
+  limit: 300
+
+backend:
+  type: hf
+  hf:
+    device_map: auto
+    dtype: auto
+    load_in_4bit: true
+    max_loaded_models: 1
+    trust_remote_code: false
+
+team:
+  agents: 5
+  models:
+    - Qwen/Qwen2.5-3B-Instruct   # REPLACE with a verified ~5B instruct model if desired
+  roles:
+    - attending physician
+    - internist
+    - specialist
+    - radiologist
+    - resident
+  temperature: 0.7
+  forecast_temperature: 0.0
+  top_p: 1.0
+  max_new_tokens: 256
+  rounds: 2
+
+cells: [H0, H1, H2, H3, H4, H5, SYC]
+
+scoring:
+  variant: geometric
+  eps: 1.0e-9
+
+analysis:
+  n_bootstrap: 1000
+  bootstrap_seed: 7
+  ece_bins: 10
+  alpha: 0.05
+  rarity_premium_threshold: 0.05
+  discrimination_gap_threshold: 0.10
+  p5_delta_threshold: 0.15
+  p2_delta_threshold: 0.10
+  oracle_abs_threshold: 0.05
+
+output_dir: results/gpu_pubmedqa_5b
