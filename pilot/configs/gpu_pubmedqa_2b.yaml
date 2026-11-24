@@ -1,10 +1,9 @@
-run_name: gpu_pubmedqa_8b
+run_name: gpu_pubmedqa_2b
 seed: 13
 
-# GPU config - ~8B target model (PubMedQA).
-# Llama-3.1-8B-Instruct is gated on HF: accept license + set HF_TOKEN/HF login on GPU PC.
-# If you don't want gated model, replace with an open 8B instruct (e.g. Qwen3-8B or another).
-# Independent run / own output dir. Resume-safe within same out dir via --resume.
+# GPU config - ~2B target model (PubMedQA, genuine H4 evidence partition).
+# Uses Qwen2.5-1.5B-Instruct (1.5B, closest open 2B-class instruct model).
+# Independent run: own output dir. Resume-safe with same config+same --out+--resume.
 data:
   dataset: pubmedqa
   path: data/cases/pubmedqa_300.jsonl
@@ -22,7 +21,7 @@ backend:
 team:
   agents: 5
   models:
-    - meta-llama/Llama-3.1-8B-Instruct
+    - Qwen/Qwen2.5-1.5B-Instruct
   roles:
     - attending physician
     - internist
@@ -52,4 +51,4 @@ analysis:
   p2_delta_threshold: 0.10
   oracle_abs_threshold: 0.05
 
-output_dir: results/gpu_pubmedqa_8b
+output_dir: results/gpu_pubmedqa_2b

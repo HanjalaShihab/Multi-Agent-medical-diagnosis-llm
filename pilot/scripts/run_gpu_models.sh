@@ -4,15 +4,15 @@
 # Resume-safe: if PC shuts down, rerun same command with --resume (default).
 #
 # Examples:
-#   bash scripts/run_gpu_models.sh                       # all gpu_pubmedqa_{3..8}b
-#   MODELS="7b 8b" bash scripts/run_gpu_models.sh        # only 7B,8B
+#   bash scripts/run_gpu_models.sh                       # all gpu_pubmedqa_{2..7}b
+#   MODELS="6b 7b" bash scripts/run_gpu_models.sh        # only 6B,7B
 #   LIMIT=60 CELLS=H1,H4,H5,SYC bash scripts/run_gpu_models.sh  # first pass
 #   RESUME=0 bash scripts/run_gpu_models.sh              # fresh (careful: overwrites run logs)
 #
 # Before full runs:
 #   - activate venv, install requirements-gpu.txt
 #   - prepare data/cases/pubmedqa_300.jsonl
-#   - check HF access for gated models (Llama 8B needs HF token/license)
+#   - check HF access for gated models if you add any (not needed for default 2B-7B set)
 
 set -euo pipefail
 
@@ -23,7 +23,7 @@ export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 PY="${PYTHON:-python}"
 if [ -x "$ROOT/.venv/bin/python" ]; then PY="$ROOT/.venv/bin/python"; fi
 
-MODELS="${MODELS:-3b 4b 5b 6b 7b 8b}"
+MODELS="${MODELS:-2b 3b 4b 5b 6b 7b}"
 LIMIT="${LIMIT:-}"
 CELLS="${CELLS:-}"
 RESUME="${RESUME:-1}"

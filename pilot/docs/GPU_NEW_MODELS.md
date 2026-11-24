@@ -57,25 +57,19 @@ Independent configs, one model per run, separate output dirs:
 
 | Config | Target model | Output dir | Notes |
 |---|---|---|---|
+| `configs/gpu_pubmedqa_2b.yaml` | `Qwen/Qwen2.5-1.5B-Instruct` | `results/gpu_pubmedqa_2b` | 1.5B, closest open 2B-class instruct |
 | `configs/gpu_pubmedqa_3b.yaml` | `Qwen/Qwen2.5-3B-Instruct` | `results/gpu_pubmedqa_3b` | Open HF model |
 | `configs/gpu_pubmedqa_4b.yaml` | `Qwen/Qwen3-4B-Instruct-2507` | `results/gpu_pubmedqa_4b` | Verify HF ID on GPU PC |
 | `configs/gpu_pubmedqa_5b.yaml` | placeholder (replace) | `results/gpu_pubmedqa_5b` | **Edit model ID**; true 5B instruct is uncommon |
 | `configs/gpu_pubmedqa_6b.yaml` | `01-ai/Yi-1.5-6B-Chat` | `results/gpu_pubmedqa_6b` | Verify chat template/parse rate |
 | `configs/gpu_pubmedqa_7b.yaml` | `Qwen/Qwen2.5-7B-Instruct` | `results/gpu_pubmedqa_7b` | Good baseline |
-| `configs/gpu_pubmedqa_8b.yaml` | `meta-llama/Llama-3.1-8B-Instruct` | `results/gpu_pubmedqa_8b` | **Gated**: HF license + token/login |
 
 All use `device_map: auto`, `dtype: auto`, `load_in_4bit: true`, `max_loaded_models: 1`.
 Change `load_in_4bit` to `false` only if you have enough VRAM and want full precision.
 
 ## 5) Download/check models on GPU PC
 
-Hugging Face models are downloaded automatically on first use (to HF cache). For gated models:
-
-```bash
-# for Llama 3.1 8B, after accepting license on HF website:
-huggingface-cli login
-# or export HF_TOKEN=...
-```
+Hugging Face models are downloaded automatically on first use (to HF cache). For gated models (if you later add one), run `huggingface-cli login` or set `HF_TOKEN` after accepting the HF license.
 
 Optional pre-download (example):
 
@@ -83,11 +77,11 @@ Optional pre-download (example):
 python - <<'PY'
 from huggingface_hub import snapshot_download
 for m in [
+  "Qwen/Qwen2.5-1.5B-Instruct",
   "Qwen/Qwen2.5-3B-Instruct",
   "Qwen/Qwen3-4B-Instruct-2507",
   "01-ai/Yi-1.5-6B-Chat",
   "Qwen/Qwen2.5-7B-Instruct",
-  "meta-llama/Llama-3.1-8B-Instruct",
 ]:
     print('downloading', m)
     snapshot_download(repo_id=m)
@@ -123,14 +117,14 @@ If PC shuts down, rerun the **same** command. It resumes from existing `answers.
 ## 7) Run all selected models
 
 ```bash
-# first pass for all 3b-8b configs
+# first pass for all 2b-7b configs
 LIMIT=60 CELLS=H1,H4,H5,SYC bash scripts/run_gpu_models.sh
 
 # full runs (resume-safe)
 bash scripts/run_gpu_models.sh
 
 # only selected models
-MODELS="7b 8b" bash scripts/run_gpu_models.sh
+MODELS="6b 7b" bash scripts/run_gpu_models.sh
 ```
 
 ## 8) Outputs
