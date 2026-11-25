@@ -1,0 +1,56 @@
+run_name: colab_medxpertqa_small
+seed: 13
+
+# Google Colab config - small model team from the local PC:
+#   Qwen2.5-0.5B-Instruct + Qwen2.5-1.5B-Instruct (cycled as 0.5, 1.5, 0.5).
+# T4 GPU, no API key, no local model folder. Own output dir = resume-safe.
+data:
+  dataset: medxpertqa
+  path: data/cases/medxpertqa_300.jsonl
+  limit: 300
+
+backend:
+  type: hf
+  hf:
+    device_map: auto
+    dtype: float16
+    load_in_4bit: false
+    max_loaded_models: 1
+    trust_remote_code: false
+
+team:
+  agents: 5
+  models:
+    - Qwen/Qwen2.5-0.5B-Instruct
+    - Qwen/Qwen2.5-1.5B-Instruct
+    - Qwen/Qwen2.5-0.5B-Instruct
+  roles:
+    - attending physician
+    - internist
+    - specialist
+    - radiologist
+    - resident
+  temperature: 0.7
+  forecast_temperature: 0.0
+  top_p: 1.0
+  max_new_tokens: 160
+  rounds: 2
+
+cells: [H0, H1, H2, H3, H4, H5, SYC]
+
+scoring:
+  variant: geometric
+  eps: 1.0e-9
+
+analysis:
+  n_bootstrap: 1000
+  bootstrap_seed: 7
+  ece_bins: 10
+  alpha: 0.05
+  rarity_premium_threshold: 0.05
+  discrimination_gap_threshold: 0.10
+  p5_delta_threshold: 0.15
+  p2_delta_threshold: 0.10
+  oracle_abs_threshold: 0.05
+
+output_dir: results/colab_medxpertqa_small
