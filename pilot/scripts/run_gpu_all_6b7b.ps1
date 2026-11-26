@@ -25,7 +25,12 @@
 [CmdletBinding()]
 param()
 
-$ErrorActionPreference = "Stop"
+# Native stderr (tqdm progress) must NOT become a terminating error here.
+# Exit status is checked explicitly with $LASTEXITCODE below instead.
+$ErrorActionPreference = "Continue"
+if (Test-Path variable:PSNativeCommandUseErrorActionPreference) {
+    $PSNativeCommandUseErrorActionPreference = $false
+}
 Set-Location (Split-Path -Parent $PSScriptRoot)
 
 $env:HF_HUB_OFFLINE = "1"
