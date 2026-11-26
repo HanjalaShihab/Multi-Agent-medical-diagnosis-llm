@@ -99,7 +99,11 @@ def cmd_run(args: argparse.Namespace) -> int:
     ensure_run_dir.mkdir(parents=True, exist_ok=True)
     save_config(cfg, ensure_run_dir / "config_used.yaml")
 
-    print(f"Backend: {cfg['backend']['type']} | cases: {len(cases)} | cells: {cfg['cells']}")
+    limit = cfg["data"].get("limit")
+    cases_shown = f"{limit} of {len(cases)}" if limit else str(len(cases))
+    print(
+        f"Backend: {cfg['backend']['type']} | cases: {cases_shown} | cells: {cfg['cells']}"
+    )
     runner = ExperimentRunner(cfg, cases, ensure_run_dir)
     runner.run(cells=cfg["cells"], limit=cfg["data"].get("limit"), resume=args.resume)
 
