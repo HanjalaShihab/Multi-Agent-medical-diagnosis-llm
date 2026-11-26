@@ -1,0 +1,359 @@
+{
+  "run_name": "gpu_pubmedqa_2b",
+  "status": "finished",
+  "created_or_updated": "2026-11-26T03:14:28",
+  "backend": "hf",
+  "n_cases": 300,
+  "cells": [
+    "H0",
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "SYC"
+  ],
+  "cell_plans": {
+    "H0": {
+      "cell": "H0",
+      "temperature": 0.0,
+      "rounds": 1,
+      "evidence_mode": "full",
+      "citation_required": false,
+      "pressure": false,
+      "description": "One model, one prompt, temperature 0. Consensus collapse control.",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        }
+      ]
+    },
+    "H1": {
+      "cell": "H1",
+      "temperature": 0.7,
+      "rounds": 1,
+      "evidence_mode": "full",
+      "citation_required": false,
+      "pressure": false,
+      "description": "One model, one prompt, temperature 0.7. Sampling noise only.",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        }
+      ]
+    },
+    "H2": {
+      "cell": "H2",
+      "temperature": 0.7,
+      "rounds": 1,
+      "evidence_mode": "full",
+      "citation_required": false,
+      "pressure": false,
+      "description": "One model, five role prompts. Role heterogeneity only.",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "internist"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "specialist"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "radiologist"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "resident"
+        }
+      ]
+    },
+    "H3": {
+      "cell": "H3",
+      "temperature": 0.7,
+      "rounds": 1,
+      "evidence_mode": "full",
+      "citation_required": false,
+      "pressure": false,
+      "description": "Three model families, one prompt. Model heterogeneity only.",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        }
+      ]
+    },
+    "H4": {
+      "cell": "H4",
+      "temperature": 0.7,
+      "rounds": 1,
+      "evidence_mode": "slice",
+      "citation_required": false,
+      "pressure": false,
+      "description": "Three model families, one disjoint evidence slice each. Evidence heterogeneity.",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        }
+      ]
+    },
+    "H5": {
+      "cell": "H5",
+      "temperature": 0.7,
+      "rounds": 2,
+      "evidence_mode": "slice",
+      "citation_required": true,
+      "pressure": false,
+      "description": "H4 plus a citation requirement and one deliberation round.",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        }
+      ]
+    },
+    "SYC": {
+      "cell": "SYC",
+      "temperature": 0.7,
+      "rounds": 1,
+      "evidence_mode": "full",
+      "citation_required": false,
+      "pressure": true,
+      "description": "H1 plus wrong-answer user pressure. Sycophancy control (P7).",
+      "agents": [
+        {
+          "agent_id": 0,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 1,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 2,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 3,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        },
+        {
+          "agent_id": 4,
+          "model": "Qwen/Qwen2.5-1.5B-Instruct",
+          "role": "attending physician"
+        }
+      ]
+    }
+  },
+  "config": {
+    "run_name": "gpu_pubmedqa_2b",
+    "seed": 13,
+    "output_dir": "results/gpu_pubmedqa_2b_full",
+    "data": {
+      "path": "data/cases/pubmedqa_300.jsonl",
+      "dataset": "pubmedqa",
+      "limit": 300,
+      "max_options": 10
+    },
+    "backend": {
+      "type": "hf",
+      "hf": {
+        "device_map": "auto",
+        "dtype": "auto",
+        "load_in_4bit": true,
+        "trust_remote_code": false,
+        "max_loaded_models": 1
+      },
+      "ollama": {
+        "host": "http://localhost:11434",
+        "timeout": 300
+      },
+      "mock": {
+        "skill": 0.65,
+        "signal_strength": 2.0,
+        "forecast_own_weight": 0.0,
+        "forecast_noise": 0.1,
+        "decoy_strength": 2.4,
+        "pressure_strength": 3.2,
+        "prevalence_weight": 0.3
+      }
+    },
+    "team": {
+      "agents": 5,
+      "models": [
+        "Qwen/Qwen2.5-1.5B-Instruct"
+      ],
+      "roles": [
+        "attending physician",
+        "internist",
+        "specialist",
+        "radiologist",
+        "resident"
+      ],
+      "temperature": 0.7,
+      "forecast_temperature": 0.0,
+      "top_p": 1.0,
+      "max_new_tokens": 256,
+      "rounds": 2,
+      "forecast_mode": "separate",
+      "forecast_include_own_answer": true,
+      "citation_required": false,
+      "deliberation": false
+    },
+    "cells": [
+      "H0",
+      "H1",
+      "H2",
+      "H3",
+      "H4",
+      "H5",
+      "SYC"
+    ],
+    "scoring": {
+      "eps": 1e-09,
+      "variant": "geometric",
+      "forecast_smoothing": 0.01
+    },
+    "analysis": {
+      "n_bootstrap": 1000,
+      "bootstrap_seed": 7,
+      "ece_bins": 10,
+      "alpha": 0.05,
+      "rarity_premium_threshold": 0.05,
+      "discrimination_gap_threshold": 0.1,
+      "p5_delta_threshold": 0.15,
+      "p2_delta_threshold": 0.1,
+      "oracle_abs_threshold": 0.05
+    }
+  },
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "numpy": "2.5.5",
+    "pandas": "3.1.1",
+    "torch": "2.6.0+cu124",
+    "transformers": "5.24.0"
+  }
+}

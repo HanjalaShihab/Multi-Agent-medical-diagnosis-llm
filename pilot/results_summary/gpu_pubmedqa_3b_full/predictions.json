@@ -1,0 +1,121 @@
+{
+  "P1": {
+    "status": "consistent",
+    "agreement_rate": 0.9966666666666667,
+    "score_variance": 0.0,
+    "auc": 0.5
+  },
+  "P2": {
+    "status": "consistent",
+    "delta": -0.03002285617213174,
+    "p": 0.1,
+    "direction": "null"
+  },
+  "P3": {
+    "status": "consistent",
+    "delta": -0.04172789815173644,
+    "p": 0.014,
+    "direction": "null"
+  },
+  "P4": {
+    "status": "consistent",
+    "delta": -0.004631210599218005,
+    "p": 0.85,
+    "direction": "null"
+  },
+  "P5": {
+    "status": "falsified",
+    "delta": -0.08242855902023793,
+    "rho_H4": 0.304,
+    "rho_H3": 0.2916666666666667
+  },
+  "P6a": {
+    "status": "falsified",
+    "mean_premium": -0.7919288076165446,
+    "by_cell": {
+      "H1": -0.7782373217403573,
+      "H2": -0.6069855652064127,
+      "H3": -0.9432974005445565,
+      "H4": -0.9959363251848404,
+      "H5": -0.7226131998945757,
+      "SYC": -0.7045030331285248
+    },
+    "oracle_by_cell": {
+      "H1": 0.2236574686359797,
+      "H2": 0.266228302864129,
+      "H3": 0.21500497639645602,
+      "H4": 0.2437725364960827,
+      "H5": 0.27070165386355843,
+      "SYC": 0.24333339326413464
+    },
+    "interpretation": "mechanical within-case rarity slope of the BTS information score",
+    "disease_prevalence_claims": "not_testable_on_this_suite"
+  },
+  "P6b": {
+    "status": "consistent",
+    "max_abs_gap_H0_H3": 1.0408340855860843e-16,
+    "by_cell": {
+      "H0": NaN,
+      "H1": 0.0,
+      "H2": 1.0408340855860843e-16,
+      "H3": 0.0,
+      "H4": 0.0,
+      "H5": 0.0,
+      "SYC": NaN
+    },
+    "elicited_by_cell": {
+      "H0": NaN,
+      "H1": -0.22015401246584393,
+      "H2": -0.15410780872609064,
+      "H3": 0.5824497609739312,
+      "H4": -0.28517894223366236,
+      "H5": -0.1120858163781022,
+      "SYC": NaN
+    },
+    "n_matched_by_cell": {
+      "H0": 0,
+      "H1": 1,
+      "H2": 2,
+      "H3": 1,
+      "H4": 1,
+      "H5": 2,
+      "SYC": 0
+    },
+    "interpretation": "mechanical implementation check: oracle score is a function of the answer count",
+    "disease_prevalence_claims": "not_testable_on_this_suite"
+  },
+  "P7": {
+    "status": "falsified",
+    "agent_flip_rate": 0.272,
+    "n_matched": 1500,
+    "selection_flip_majority": 0.25,
+    "selection_accuracy_majority_press": 0.21666666666666667,
+    "selection_accuracy_majority_base": 0.36666666666666664,
+    "selection_flip_confidence": 0.2633333333333333,
+    "selection_accuracy_confidence_press": 0.21,
+    "selection_accuracy_confidence_base": 0.36666666666666664,
+    "selection_flip_bts": 0.28,
+    "selection_accuracy_bts_press": 0.20666666666666667,
+    "selection_accuracy_bts_base": 0.36666666666666664,
+    "selection_flip_proper": 0.13666666666666666,
+    "selection_accuracy_proper_press": 0.26666666666666666,
+    "selection_accuracy_proper_base": 0.36666666666666664,
+    "bts_minus_majority_press": -0.010000000000000009,
+    "bts_flip_minus_majority": 0.030000000000000027
+  },
+  "P8": {
+    "status": "partial",
+    "oracle_delta_H1_H3": [
+      -0.033765940442683884,
+      -0.037316353506789524,
+      -0.04048472314415841
+    ],
+    "oracle_reduction_H1_H3": [
+      -0.12467448963188943,
+      0.10572170754695298,
+      -7.741714995857537
+    ],
+    "oracle_delta_H4": 0.03228958568574658
+  },
+  "verdict": "NO-GO / revise"
+}

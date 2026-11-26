@@ -1,0 +1,123 @@
+{
+  "P1": {
+    "status": "falsified",
+    "agreement_rate": 0.9866666666666667,
+    "score_variance": 0.0041620976303666825,
+    "auc": 0.4939815426633188
+  },
+  "P2": {
+    "status": "consistent",
+    "delta": 0.0002832940035109033,
+    "p": 0.994,
+    "direction": "null"
+  },
+  "P3": {
+    "status": "consistent",
+    "delta": 0.05022058529963669,
+    "p": 0.138,
+    "direction": "null"
+  },
+  "P4": {
+    "status": "consistent",
+    "delta": -0.09928317468734105,
+    "p": 0.006,
+    "direction": "null"
+  },
+  "P5": {
+    "status": "falsified",
+    "delta": -0.01854082517309308,
+    "rho_H4": 0.3111888111888112,
+    "rho_H3": 0.3644067796610169
+  },
+  "P6a": {
+    "status": "falsified",
+    "mean_premium": -0.9805465233531034,
+    "by_cell": {
+      "H0": -1.420148690862026,
+      "H1": -0.9142786465276831,
+      "H2": -0.9051181166540722,
+      "H3": -0.9560431937632856,
+      "H4": -1.0259236737204973,
+      "H5": -0.863829255284657,
+      "SYC": -0.7784840866595029
+    },
+    "oracle_by_cell": {
+      "H0": 0.3454324606522067,
+      "H1": 0.35131784836000635,
+      "H2": 0.353660490251335,
+      "H3": 0.39876546652217465,
+      "H4": 0.3489322294606168,
+      "H5": 0.45430084578722907,
+      "SYC": 0.4877866277387791
+    },
+    "interpretation": "mechanical within-case rarity slope of the BTS information score",
+    "disease_prevalence_claims": "not_testable_on_this_suite"
+  },
+  "P6b": {
+    "status": "consistent",
+    "max_abs_gap_H0_H3": 4.0902953538821554e-17,
+    "by_cell": {
+      "H0": NaN,
+      "H1": -4.0902953538821554e-17,
+      "H2": -2.107367778223677e-17,
+      "H3": 1.02798428206033e-18,
+      "H4": -2.59648933178464e-17,
+      "H5": 2.0451476769410777e-17,
+      "SYC": 0.0
+    },
+    "elicited_by_cell": {
+      "H0": NaN,
+      "H1": 0.10018721099225822,
+      "H2": 0.06763160570259384,
+      "H3": -0.12907875338321287,
+      "H4": 0.13978605932460633,
+      "H5": -0.05275368424252457,
+      "SYC": 0.005008087658170958
+    },
+    "n_matched_by_cell": {
+      "H0": 0,
+      "H1": 19,
+      "H2": 27,
+      "H3": 27,
+      "H4": 31,
+      "H5": 38,
+      "SYC": 33
+    },
+    "interpretation": "mechanical implementation check: oracle score is a function of the answer count",
+    "disease_prevalence_claims": "not_testable_on_this_suite"
+  },
+  "P7": {
+    "status": "consistent",
+    "agent_flip_rate": 0.5646666666666667,
+    "n_matched": 1500,
+    "selection_flip_majority": 0.41333333333333333,
+    "selection_accuracy_majority_press": 0.32,
+    "selection_accuracy_majority_base": 0.5466666666666666,
+    "selection_flip_confidence": 0.41333333333333333,
+    "selection_accuracy_confidence_press": 0.32,
+    "selection_accuracy_confidence_base": 0.5466666666666666,
+    "selection_flip_bts": 0.45,
+    "selection_accuracy_bts_press": 0.3333333333333333,
+    "selection_accuracy_bts_base": 0.57,
+    "selection_flip_proper": 0.34,
+    "selection_accuracy_proper_press": 0.32,
+    "selection_accuracy_proper_base": 0.49,
+    "bts_minus_majority_press": 0.013333333333333308,
+    "bts_flip_minus_majority": 0.03666666666666668
+  },
+  "P8": {
+    "status": "partial",
+    "oracle_delta_H1_H3": [
+      -0.14111222219792408,
+      -0.08053060246736138,
+      -0.06757409140462545
+    ],
+    "oracle_reduction_H1_H3": [
+      -497.112280701674,
+      -0.6035377124118058,
+      0.31938023116779546
+    ],
+    "oracle_delta_H4": -0.077189681141355
+  },
+  "verdict": "NO-GO / revise"
+}
