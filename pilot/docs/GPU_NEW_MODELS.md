@@ -138,7 +138,7 @@ Each run dir has: `report.md`, `cell_metrics.csv`, `metrics.json`, `predictions.
 - Keep **one output dir per model/config**.
 - Old 0.5B/1.5B CPU runs can be run again later only by using their original config+output dir; they are independent from these GPU runs.
 
-## 11) Deadline rescue: quick big-model probes (today only)
+## 10) Deadline rescue: fast 6B + 7B probes (today only)
 
 If the 300-case full runs will not finish in time, **stop them** (`Ctrl+C` in each
 PowerShell terminal; `--resume` keeps everything already written) and run the
@@ -146,29 +146,23 @@ small probes instead. They use **new configs and new output dirs**, so nothing
 mixes with the full runs.
 
 ```powershell
-# GPU 0: 4B then 6B
-.\\scripts\\run_gpu_quick.ps1 -Models @("4b","6b") -Device "0"
-
-# GPU 1: 7B
-.\\scripts\\run_gpu_quick.ps1 -Models @("7b") -Device "1"
-```
-
-Each probe: 60 PubMedQA cases, cells `H1,H4,H5,SYC`, `max_new_tokens: 120`,
-4-bit, HF offline (no more 429 rate-limit waits). Outputs go to
-`results/gpu_quick_pubmedqa_<size>/`.
-
-After they finish, collect everything, including the probes:
-
-```powershell
 cd pilot
-python scripts/collect_results.py --src results --out results_summary `
-  --pattern 'gpu*'
+.\\scripts\\run_gpu_quick_6b7b.ps1
 ```
 
-Then commit/push `pilot/results_summary` and `git pull` on the laptop. In the
-thesis, label these as **60-case quick probes**, not full benchmark results.
+One command runs **6B on GPU 0 and 7B on GPU 1 in parallel**. It first downloads
+the full model snapshots once (needed for the un-cached 6B model and for the 7B
+chat-template files that caused the HTTP 429 retries), then runs both audits
+with `HF_HUB_OFFLINE=1`.
 
-## 10) Share the results with the laptop after the runs finish
+Each probe: **40 PubMedQA cases**, cells `H1,H4,H5,SYC`, `max_new_tokens: 96`,
+4-bit. Outputs go to `results/gpu_quick_pubmedqa_6b/` and
+`results/gpu_quick_pubmedqa_7b/`. If the download was already done, use
+`-SkipPrefetch`. If you prefer two terminals, use the older
+`scripts/run_gpu_quick.ps1` with `-Models @("6b")` and `-Models @("7b")`
+after running the prefetch script yourself.
+
+## 11) Share the results with the laptop after the runs finish
 
 `pilot/results/` is git-ignored, so a plain `git push` from this PC will **not**
 send `report.md` or `cell_metrics.csv`. Convert the finished runs into a small,
@@ -177,7 +171,7 @@ tracked summary first:
 ```bash
 cd pilot
 python scripts/collect_results.py --src results --out results_summary \
-  --pattern 'gpu_pubmedqa_*_full'
+  --pattern 'gpu*'
 ```
 
 This copies only the shareable files (`report.md`, `cell_metrics.csv`,
