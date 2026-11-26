@@ -137,3 +137,41 @@ Each run dir has: `report.md`, `cell_metrics.csv`, `metrics.json`, `predictions.
 - **Do not** resume with a changed model into the same out dir.
 - Keep **one output dir per model/config**.
 - Old 0.5B/1.5B CPU runs can be run again later only by using their original config+output dir; they are independent from these GPU runs.
+
+## 10) Share the results with the laptop after the runs finish
+
+`pilot/results/` is git-ignored, so a plain `git push` from this PC will **not**
+send `report.md` or `cell_metrics.csv`. Convert the finished runs into a small,
+tracked summary first:
+
+```bash
+cd pilot
+python scripts/collect_results.py --src results --out results_summary \
+  --pattern 'gpu_pubmedqa_*_full'
+```
+
+This copies only the shareable files (`report.md`, `cell_metrics.csv`,
+`metrics.json`, `predictions.json`, `agent_scores.csv`, `run_meta.json`,
+`config_used.yaml`, `figures/*.png`) into `pilot/results_summary/` and writes a
+combined `summary_all.csv` plus an `INDEX.md` that marks any incomplete run.
+Raw `answers.jsonl` / `forecasts.jsonl` stay local.
+
+Then, on this PC:
+
+```bash
+git add pilot/results_summary
+git commit -m "Add GPU PubMedQA model comparison summary"
+git push origin main
+```
+
+On the laptop:
+
+```bash
+cd "/home/hanjala-shihab/Documents/Multi-Agent medical diagnosis llm"
+git pull origin main
+```
+
+You can then open `pilot/results_summary/summary_all.csv` for a side-by-side
+comparison of `accuracy`, `selection_accuracy_*`, `auc_score`, `delta_auc`,
+`agreement_rate`, `rarity_premium`, `delta_auc_oracle`, etc. per model and cell,
+and `pilot/results_summary/<run>/report.md` for the P1-P8 verdict.

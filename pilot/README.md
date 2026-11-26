@@ -595,7 +595,13 @@ pilot/
   data/README.md      dataset schemas, layouts, licenses
   docs/PILOT_GUIDE.md 2-week run plan and go/no-go decision tree
   docs/KAGGLE.md      Kaggle (GPU) and CPU run guide
+  docs/COLAB.md       Google Colab small-model all-dataset sweep
+  docs/THESIS_5DAY_PLAN.md  deadline-limited Bachelor thesis plan
+  notebooks/colab_thesis_scope.ipynb  Colab notebook for that plan
+  thesis/             THESIS_DRAFT.md + BTS_Thesis_Draft.docx (DIU-style draft)
+  scripts/collect_results.py  copy shareable metrics out of git-ignored results/
   results/            generated runs (git-ignored)
+  results_summary/    pushed summary (summary_all.csv, reports, figures)
 ```
 
 ---

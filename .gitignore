@@ -1,6 +1,10 @@
 # Unrelated local material, not part of this project.
 Samples/
 
+# Local research PDFs / spreadsheets kept on this machine only.
+*.pdf
+*.ods
+
 # Local model downloads (large, not for git)
 hf_models/
 

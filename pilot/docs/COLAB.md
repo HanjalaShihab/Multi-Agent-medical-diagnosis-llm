@@ -16,10 +16,13 @@ On your laptop, push the new configs/script/notebook/doc:
 
 ```bash
 cd "/home/hanjala-shihab/Documents/Multi-Agent medical diagnosis llm"
-git add -A
+git add pilot/configs/colab_*_small.yaml pilot/scripts/run_colab_all_small.sh \
+  pilot/notebooks/colab_small_models.ipynb pilot/docs/COLAB.md
 git commit -m "Add Google Colab small-model all-dataset sweep"
 git push origin main
 ```
+
+Do not use `git add -A` here: the repository root now contains large untracked PDFs and the DIU Word template/guidelines, which do not need to be pushed for Colab.
 
 ## Colab settings
 
