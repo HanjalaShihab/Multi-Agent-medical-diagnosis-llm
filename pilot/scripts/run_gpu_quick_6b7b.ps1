@@ -49,12 +49,19 @@ $job7 = Start-Job -Name "quick-7b" -ScriptBlock {
         --limit 40 --cells "H1,H4,H5,SYC" --resume
 } -ArgumentList $Device7B, $wd
 
-Write-Host "Both probes started. Check progress with: Get-Job | Select Name,State" -ForegroundColor Cyan
 $jobs = @($job6, $job7)
-$jobs | Wait-Job | Out-Null
+Write-Host "Both probes started: 6B on GPU $Device6B, 7B on GPU $Device7B." -ForegroundColor Cyan
+
+# Stream progress into this window so it visibly starts.
+while (@($jobs | Where-Object { $_.State -eq 'Running' }).Count -gt 0) {
+    foreach ($j in $jobs) {
+        Receive-Job $j -Keep | Select-Object -Last 3
+    }
+    Start-Sleep -Seconds 15
+}
 
 foreach ($j in $jobs) {
     Write-Host "===== $($j.Name): $($j.State) =====" -ForegroundColor Green
-    Receive-Job $j
+    Receive-Job $j | Select-Object -Last 15
     Remove-Job $j
 }
