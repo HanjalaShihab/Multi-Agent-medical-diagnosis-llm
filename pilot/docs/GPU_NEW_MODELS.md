@@ -138,6 +138,36 @@ Each run dir has: `report.md`, `cell_metrics.csv`, `metrics.json`, `predictions.
 - Keep **one output dir per model/config**.
 - Old 0.5B/1.5B CPU runs can be run again later only by using their original config+output dir; they are independent from these GPU runs.
 
+## 11) Deadline rescue: quick big-model probes (today only)
+
+If the 300-case full runs will not finish in time, **stop them** (`Ctrl+C` in each
+PowerShell terminal; `--resume` keeps everything already written) and run the
+small probes instead. They use **new configs and new output dirs**, so nothing
+mixes with the full runs.
+
+```powershell
+# GPU 0: 4B then 6B
+.\\scripts\\run_gpu_quick.ps1 -Models @("4b","6b") -Device "0"
+
+# GPU 1: 7B
+.\\scripts\\run_gpu_quick.ps1 -Models @("7b") -Device "1"
+```
+
+Each probe: 60 PubMedQA cases, cells `H1,H4,H5,SYC`, `max_new_tokens: 120`,
+4-bit, HF offline (no more 429 rate-limit waits). Outputs go to
+`results/gpu_quick_pubmedqa_<size>/`.
+
+After they finish, collect everything, including the probes:
+
+```powershell
+cd pilot
+python scripts/collect_results.py --src results --out results_summary `
+  --pattern 'gpu*'
+```
+
+Then commit/push `pilot/results_summary` and `git pull` on the laptop. In the
+thesis, label these as **60-case quick probes**, not full benchmark results.
+
 ## 10) Share the results with the laptop after the runs finish
 
 `pilot/results/` is git-ignored, so a plain `git push` from this PC will **not**

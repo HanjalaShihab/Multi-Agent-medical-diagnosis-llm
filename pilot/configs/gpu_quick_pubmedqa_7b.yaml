@@ -1,0 +1,54 @@
+run_name: gpu_quick_pubmedqa_7b
+seed: 13
+
+# TIME-LIMITED QUICK PROBE (not a full benchmark claim).
+# 60 PubMedQA cases x H1,H4,H5,SYC; 120 new tokens; 4-bit on RTX 2060.
+# Separate config + separate output dir: never resume into the 300-case full run.
+data:
+  dataset: pubmedqa
+  path: data/cases/pubmedqa_300.jsonl
+  limit: 60
+
+backend:
+  type: hf
+  hf:
+    device_map: auto
+    dtype: auto
+    load_in_4bit: true
+    max_loaded_models: 1
+    trust_remote_code: false
+
+team:
+  agents: 5
+  models:
+    - Qwen/Qwen2.5-7B-Instruct
+  roles:
+    - attending physician
+    - internist
+    - specialist
+    - radiologist
+    - resident
+  temperature: 0.7
+  forecast_temperature: 0.0
+  top_p: 1.0
+  max_new_tokens: 120
+  rounds: 2
+
+cells: [H1, H4, H5, SYC]
+
+scoring:
+  variant: geometric
+  eps: 1.0e-9
+
+analysis:
+  n_bootstrap: 500
+  bootstrap_seed: 7
+  ece_bins: 10
+  alpha: 0.05
+  rarity_premium_threshold: 0.05
+  discrimination_gap_threshold: 0.10
+  p5_delta_threshold: 0.15
+  p2_delta_threshold: 0.10
+  oracle_abs_threshold: 0.05
+
+output_dir: results/gpu_quick_pubmedqa_7b
