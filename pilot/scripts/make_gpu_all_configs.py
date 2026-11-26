@@ -8,6 +8,7 @@ pre-registered support subset H1,H4,H5,SYC.
 """
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import yaml
@@ -28,9 +29,18 @@ DATASETS = {
 }
 
 
-def build(model_tag: str, model_id: str, ds_name: str, dataset: str, path: str, cells: list[str]) -> dict:
+def build(
+    model_tag: str,
+    model_id: str,
+    ds_name: str,
+    dataset: str,
+    path: str,
+    cells: list[str],
+    prefix: str,
+    tokens: int,
+) -> dict:
     return {
-        "run_name": f"gpu_{model_tag}_{ds_name}",
+        "run_name": f"{prefix}_{model_tag}_{ds_name}",
         "seed": 13,
         "data": {"dataset": dataset, "path": path, "limit": 300},
         "backend": {
@@ -50,7 +60,7 @@ def build(model_tag: str, model_id: str, ds_name: str, dataset: str, path: str, 
             "temperature": 0.7,
             "forecast_temperature": 0.0,
             "top_p": 1.0,
-            "max_new_tokens": 256,
+            "max_new_tokens": tokens,
             "rounds": 2,
         },
         "cells": cells,
@@ -66,16 +76,21 @@ def build(model_tag: str, model_id: str, ds_name: str, dataset: str, path: str, 
             "p2_delta_threshold": 0.10,
             "oracle_abs_threshold": 0.05,
         },
-        "output_dir": f"results/gpu_{model_tag}_{ds_name}",
+        "output_dir": f"results/{prefix}_{model_tag}_{ds_name}",
     }
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--prefix", default="gpu", help="config/output prefix, e.g. gpu_fast")
+    ap.add_argument("--tokens", type=int, default=256, help="max_new_tokens per agent answer")
+    args = ap.parse_args()
+
     CFG.mkdir(parents=True, exist_ok=True)
     for model_tag, model_id in MODELS.items():
         for ds_name, (dataset, path, cells) in DATASETS.items():
-            cfg = build(model_tag, model_id, ds_name, dataset, path, cells)
-            out = CFG / f"gpu_{model_tag}_{ds_name}.yaml"
+            cfg = build(model_tag, model_id, ds_name, dataset, path, cells, args.prefix, args.tokens)
+            out = CFG / f"{args.prefix}_{model_tag}_{ds_name}.yaml"
             out.write_text(
                 yaml.safe_dump(cfg, sort_keys=False, allow_unicode=True), encoding="utf-8"
             )

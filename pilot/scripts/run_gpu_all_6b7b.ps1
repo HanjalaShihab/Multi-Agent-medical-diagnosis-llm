@@ -12,6 +12,7 @@
 
     Usage (from anywhere, PowerShell):
         powershell -ExecutionPolicy Bypass -File .\scripts\run_gpu_all_6b7b.ps1
+        powershell -ExecutionPolicy Bypass -File .\scripts\run_gpu_all_6b7b.ps1 -Fast   # 128-token configs
 
     Prerequisites (once, while online):
         python scripts/download_data.py all --out data/raw
@@ -23,7 +24,9 @@
         python scripts/prefetch_gpu_models.py 01-ai/Yi-1.5-6B-Chat Qwen/Qwen2.5-7B-Instruct
 #>
 [CmdletBinding()]
-param()
+param(
+    [switch]$Fast   # use the 128-token gpu_fast_* configs and separate output dirs
+)
 
 # Native stderr (tqdm progress) must NOT become a terminating error here.
 # Exit status is checked explicitly with $LASTEXITCODE below instead.
@@ -37,6 +40,8 @@ $env:HF_HUB_OFFLINE = "1"
 $env:TRANSFORMERS_OFFLINE = "1"
 $env:PYTHONUNBUFFERED = "1"
 
+$prefix = if ($Fast) { "gpu_fast" } else { "gpu" }
+$pattern = if ($Fast) { 'gpu_fast_[67]b_*' } else { 'gpu_[67]b_*' }
 $models = @("6b", "7b")
 $datasets = @("pubmedqa", "medqa", "medmcqa", "mmlu_med", "medxpertqa")
 
@@ -47,14 +52,14 @@ foreach ($d in $datasets) {
         throw "Missing $caseFile. Prepare it first (see the header of this script)."
     }
     foreach ($m in $models) {
-        $cfg = "configs/gpu_${m}_${d}.yaml"
+        $cfg = "configs/${prefix}_${m}_${d}.yaml"
         if (-not (Test-Path $cfg)) {
-            throw "Missing $cfg. Run 'git pull' then 'python scripts/make_gpu_all_configs.py'."
+            throw "Missing $cfg. Run 'git pull' then 'python scripts/make_gpu_all_configs.py --prefix $prefix --tokens 128'."
         }
     }
 }
 
-$logDir = "logs/gpu_all_6b7b"
+$logDir = if ($Fast) { "logs/gpu_fast_all_6b7b" } else { "logs/gpu_all_6b7b" }
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $summary = @()
 $started = Get-Date
@@ -62,7 +67,7 @@ Write-Host "[START] $($started.ToString('o')) - 10 full runs, 300 cases each" -F
 
 foreach ($m in $models) {
     foreach ($d in $datasets) {
-        $name = "gpu_${m}_${d}"
+        $name = "${prefix}_${m}_${d}"
         $cfg = "configs/$name.yaml"
         $log = Join-Path $logDir "$name.log"
         Write-Host "[RUN] $name  $(Get-Date -Format o)  log=$log" -ForegroundColor Cyan
@@ -81,7 +86,7 @@ foreach ($m in $models) {
     }
 }
 
-& python scripts/collect_results.py --src results --out results_summary --pattern 'gpu_[67]b_*'
+& python scripts/collect_results.py --src results --out results_summary --pattern $pattern
 
 Write-Host "`n[SUMMARY] $(Get-Date -Format o) elapsed=$((Get-Date) - $started)" -ForegroundColor Cyan
 $summary | ForEach-Object { Write-Host "  $_" }
