@@ -7,7 +7,9 @@
       gpu_6b_pubmedqa -> ... -> gpu_6b_medxpertqa -> gpu_7b_pubmedqa -> ...
     Every run uses its own config and own output directory and always passes
     --resume, so an interrupted run continues instead of starting over.
-    Per-run stdout/stderr is teed to logs/gpu_all_6b7b/<name>.log.
+    Per-run stdout/stderr is teed to logs/<prefix>_all_6b7b/<name>.log.
+    Native stderr is merged via cmd.exe so tqdm progress never shows up as a
+    PowerShell NativeCommandError.
     After the last run the shareable summaries are copied to results_summary/.
 
     Usage (from anywhere, PowerShell):
@@ -72,7 +74,10 @@ foreach ($m in $models) {
         $log = Join-Path $logDir "$name.log"
         Write-Host "[RUN] $name  $(Get-Date -Format o)  log=$log" -ForegroundColor Cyan
 
-        & python -m bts_audit.cli run --config $cfg --resume 2>&1 | Tee-Object -FilePath $log
+        # cmd.exe merges the child's stderr into stdout at the OS level, so
+        # tqdm progress reaches Tee-Object as plain text instead of becoming a
+        # PowerShell NativeCommandError. $LASTEXITCODE is still Python's code.
+        & cmd /c "python -m bts_audit.cli run --config $cfg --resume 2>&1" | Tee-Object -FilePath $log
         $code = $LASTEXITCODE
 
         if ($code -ne 0) {
